@@ -6,7 +6,7 @@ description: >-
   indexing it. The content is returned as plain Markdown text on stdout.
 compatibility: Requires Node.js 22+ and npx
 metadata:
-  author: grounded.tools
+  author: arabold
 ---
 
 # Fetch URL

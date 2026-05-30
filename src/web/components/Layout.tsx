@@ -153,7 +153,6 @@ const Layout = ({
         {/* Toast notification component */}
         <Toast />
 
-        {/* Full-width header with grounded.tools branding */}
         <header
           class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
           x-data={versionInitializer}
@@ -163,19 +162,6 @@ const Layout = ({
             {/* Large screens: single row layout */}
             <div class="hidden sm:flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <a
-                  href="https://grounded.tools"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-xl font-medium text-gray-900 dark:text-white hover:text-primary-500 dark:hover:text-primary-400 transition-colors font-brand"
-                >
-                  <span class="text-primary-600 dark:text-primary-300">
-                    grounded
-                  </span>
-                  <span class="text-accent-500">.</span>
-                  <span class="text-gray-900 dark:text-gray-100">tools</span>
-                </a>
-                <span class="text-gray-400 dark:text-gray-400">|</span>
                 <a
                   href="/"
                   class="text-lg font-semibold text-gray-900 dark:text-white hover:text-primary-500 dark:hover:text-primary-400 transition-colors font-brand"
@@ -217,23 +203,7 @@ const Layout = ({
 
             {/* Small screens: stacked layout */}
             <div class="sm:hidden space-y-2">
-              {/* Row 1: grounded.tools branding */}
-              <div class="flex justify-center">
-                <a
-                  href="https://grounded.tools"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-xl font-medium text-gray-900 dark:text-white hover:text-primary-500 dark:hover:text-primary-400 transition-colors font-brand"
-                >
-                  <span class="text-primary-600 dark:text-primary-300">
-                    grounded
-                  </span>
-                  <span class="text-accent-500">.</span>
-                  <span class="text-gray-900 dark:text-gray-100">tools</span>
-                </a>
-              </div>
-
-              {/* Row 2: Docs MCP Server + Version */}
+              {/* Row 1: Docs MCP Server + Version */}
               <div class="flex items-center justify-center gap-2">
                 <a
                   href="/"
@@ -252,7 +222,7 @@ const Layout = ({
                 ) : null}
               </div>
 
-              {/* Row 3: Update notification */}
+              {/* Row 2: Update notification */}
               <div class="flex justify-center">
                 <span
                   x-show="hasUpdate"

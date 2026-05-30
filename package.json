@@ -7,7 +7,7 @@
     "docs-mcp-server": "dist/index.js"
   },
   "license": "MIT",
-  "author": "grounded.tools",
+  "author": "Andre Rabold",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/arabold/docs-mcp-server.git"

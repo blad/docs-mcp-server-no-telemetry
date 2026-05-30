@@ -271,8 +271,8 @@ describe("Authentication End-to-End Tests", () => {
         return;
       }
 
-      expect(process.env.DOCS_MCP_AUTH_ISSUER_URL).toBe("https://engaging-cowbird-70.clerk.accounts.dev");
-      expect(process.env.DOCS_MCP_AUTH_AUDIENCE).toBe("https://mcp.grounded.tools");
+      expect(process.env.DOCS_MCP_AUTH_ISSUER_URL).toBeTruthy();
+      expect(process.env.DOCS_MCP_AUTH_AUDIENCE).toBeTruthy();
     });
 
     it("should validate issuer URL format", () => {
