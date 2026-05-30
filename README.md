@@ -1,6 +1,6 @@
 # Grounded Docs: Your AI's Up-to-Date Documentation Expert
 
-> **This is a personal fork of [arabold/docs-mcp-server](https://github.com/arabold/docs-mcp-server).** Telemetry is disabled by default — no usage data is sent anywhere. Run from source after `npm run build`.
+> **This is a personal fork of [arabold/docs-mcp-server](https://github.com/arabold/docs-mcp-server).** Telemetry has been removed entirely — no usage data is collected or sent. Run from source after `npm run build`.
 
 **Docs MCP Server** solves the problem of AI hallucinations and outdated knowledge by providing a personal, always-current documentation index for your AI coding assistant. It fetches official docs from websites, GitHub, npm, PyPI, and local files, allowing your AI to query the exact version you are using.
 
@@ -168,7 +168,6 @@ See **[Embedding Models](docs/guides/embedding-models.md)** for configuring **Ol
 -   **[Deployment Modes](docs/infrastructure/deployment-modes.md)**: Standalone vs. Distributed (Docker Compose).
 -   **[Authentication](docs/infrastructure/authentication.md)**: Securing your server with OAuth2/OIDC.
 -   **[Security](docs/infrastructure/security.md)**: Trust boundaries, deployment hardening, and outbound access controls.
--   **[Telemetry](docs/infrastructure/telemetry.md)**: Privacy-first usage data collection.
 -   **[Architecture](ARCHITECTURE.md)**: Deep dive into the system design.
 
 ---

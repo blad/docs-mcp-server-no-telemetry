@@ -15,7 +15,6 @@ Example `config.yaml`:
 ```yaml
 app:
   storePath: ~/.docs-mcp-server
-  telemetryEnabled: true
   embeddingModel: text-embedding-3-small
 
 scraper:
@@ -86,9 +85,6 @@ export DOCS_MCP_SCRAPER_DOCUMENT_MAX_SIZE=52428800
 # Override splitter settings
 export DOCS_MCP_SPLITTER_PREFERRED_CHUNK_SIZE=2000
 
-# Override app settings
-export DOCS_MCP_APP_TELEMETRY_ENABLED=false
-
 # Override scraper security settings
 export DOCS_MCP_SCRAPER_SECURITY_NETWORK_ALLOW_INVALID_TLS=true
 export DOCS_MCP_SCRAPER_SECURITY_FILE_ACCESS_FOLLOW_SYMLINKS=true
@@ -154,7 +150,6 @@ General application settings.
 | Option | Default | Description |
 |:-------|:--------|:------------|
 | `storePath` | `~/.docs-mcp-server` | Directory for storing databases and logs. |
-| `telemetryEnabled` | `true` | Enable anonymous usage telemetry. |
 | `readOnly` | `false` | Prevent modification of data (scraping/indexing). |
 | `embeddingModel` | `text-embedding-3-small` | Model to use for vector embeddings. |
 
