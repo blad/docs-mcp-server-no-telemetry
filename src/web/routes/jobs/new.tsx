@@ -3,7 +3,6 @@ import type { ScrapeTool } from "../../../tools/ScrapeTool";
 import { ScrapeMode } from "../../../scraper/types";
 import type { AppConfig } from "../../../utils/config";
 import { logger } from "../../../utils/logger";
-import AddJobButton from "../../components/AddJobButton";
 import AddVersionButton from "../../components/AddVersionButton";
 import Alert from "../../components/Alert";
 import AddJobTabs from "../../components/AddJobTabs";
@@ -151,11 +150,16 @@ export function registerNewJobRoutes(
               },
             })
           );
-          // Return the appropriate button based on the form mode
+          // Return the appropriate content based on the form mode
           if (body.formMode === "add-version") {
             return <AddVersionButton libraryName={body.library} />;
           }
-          return <AddJobButton />;
+          return (
+            <AddJobTabs
+              defaultExcludePatterns={DEFAULT_EXCLUSION_PATTERNS}
+              scraperConfig={scraperConfig}
+            />
+          );
         }
 
         // This case shouldn't happen with waitForCompletion: false, but handle defensively

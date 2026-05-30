@@ -12,7 +12,7 @@ interface AddJobTabsProps {
  * Renders a URL-based scrape tab and a file upload tab side by side.
  */
 const AddJobTabs = ({ defaultExcludePatterns, scraperConfig }: AddJobTabsProps) => (
-  <div x-data="{ tab: 'url' }" class="animate-[fadeSlideIn_0.2s_ease-out]">
+  <div x-data="{ tab: 'upload' }" class="animate-[fadeSlideIn_0.2s_ease-out]">
     {/* Tab bar */}
     <div class="flex border-b border-gray-200 dark:border-gray-700">
       <button

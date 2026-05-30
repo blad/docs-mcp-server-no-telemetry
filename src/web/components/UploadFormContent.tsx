@@ -3,36 +3,7 @@
  * Submits as multipart/form-data to POST /web/jobs/upload.
  */
 const UploadFormContent = () => (
-  <div class="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-600 relative animate-[fadeSlideIn_0.2s_ease-out]">
-    {/* Close button */}
-    <button
-      type="button"
-      hx-get="/web/jobs/new-button"
-      hx-target="#addJobForm"
-      hx-swap="innerHTML"
-      class="absolute top-3 right-3 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
-      title="Close"
-    >
-      <svg
-        class="w-5 h-5"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-    </button>
-
-    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 pr-8">
-      Upload Documentation File
-    </h3>
-
+  <div class="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-300 dark:border-gray-600 animate-[fadeSlideIn_0.2s_ease-out]">
     <form
       hx-post="/web/jobs/upload"
       hx-encoding="multipart/form-data"

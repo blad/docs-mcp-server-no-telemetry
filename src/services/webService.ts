@@ -25,6 +25,7 @@ import { registerNewJobRoutes } from "../web/routes/jobs/new";
 import { registerUploadJobRoute } from "../web/routes/jobs/upload";
 import { registerLibraryDetailRoutes } from "../web/routes/libraries/detail";
 import { registerLibrariesRoutes } from "../web/routes/libraries/list";
+import { registerSearchRoute } from "../web/routes/search";
 import { registerStatsRoute } from "../web/routes/stats";
 
 /**
@@ -55,7 +56,8 @@ export async function registerWebService(
   const clearCompletedJobsTool = new ClearCompletedJobsTool(pipeline);
 
   // Register all web routes
-  registerIndexRoute(server, externalWorkerUrl);
+  registerIndexRoute(server, externalWorkerUrl, appConfig.scraper);
+  registerSearchRoute(server, searchTool, listLibrariesTool);
   registerLibrariesRoutes(server, listLibrariesTool, removeTool, refreshVersionTool);
   registerLibraryDetailRoutes(
     server,

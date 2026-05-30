@@ -1,5 +1,7 @@
 import type { FastifyInstance } from "fastify";
-import AddJobButton from "../components/AddJobButton";
+import { DEFAULT_EXCLUSION_PATTERNS } from "../../scraper/utils/defaultPatterns";
+import type { AppConfig } from "../../utils/config";
+import AddJobTabs from "../components/AddJobTabs";
 import Layout from "../components/Layout";
 
 /**
@@ -9,7 +11,8 @@ import Layout from "../components/Layout";
  */
 export function registerIndexRoute(
   server: FastifyInstance,
-  externalWorkerUrl?: string
+  externalWorkerUrl?: string,
+  scraperConfig?: AppConfig["scraper"],
 ) {
   server.get("/", async (_, reply) => {
     reply.type("text/html");
@@ -77,11 +80,16 @@ export function registerIndexRoute(
               </div>
             </div>
           </section>
-          {/* Add New Job Section */}
+          {/* Add New Documentation Section */}
           <section class="mb-8">
-            {/* Button to reveal the scrape form, loaded via HTMX */}
+            <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+              Add New Documentation
+            </h2>
             <div id="addJobForm">
-              <AddJobButton />
+              <AddJobTabs
+                defaultExcludePatterns={DEFAULT_EXCLUSION_PATTERNS}
+                scraperConfig={scraperConfig}
+              />
             </div>
           </section>
           {/* Indexed Documentation Section */}

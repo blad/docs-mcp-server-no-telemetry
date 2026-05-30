@@ -1,12 +1,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { FastifyInstance } from "fastify";
+import { DEFAULT_EXCLUSION_PATTERNS } from "../../../scraper/utils/defaultPatterns";
 import type { ScrapeTool } from "../../../tools/ScrapeTool";
 import { ValidationError } from "../../../tools/errors";
 import type { AppConfig } from "../../../utils/config";
 import { logger } from "../../../utils/logger";
 import { resolveStorePath } from "../../../utils/paths";
-import AddJobButton from "../../components/AddJobButton";
+import AddJobTabs from "../../components/AddJobTabs";
 import Alert from "../../components/Alert";
 
 /**
@@ -99,7 +100,12 @@ export function registerUploadJobRoute(
             },
           }),
         );
-        return <AddJobButton />;
+        return (
+          <AddJobTabs
+            defaultExcludePatterns={DEFAULT_EXCLUSION_PATTERNS}
+            scraperConfig={appConfig.scraper}
+          />
+        );
       }
 
       return <Alert type="warning" message="Job finished unexpectedly quickly." />;

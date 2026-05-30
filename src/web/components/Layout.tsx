@@ -177,6 +177,13 @@ const Layout = ({
                     v{versionString}
                   </span>
                 ) : null}
+                <span class="text-gray-300 dark:text-gray-600">|</span>
+                <a
+                  href="/search"
+                  class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                >
+                  Search
+                </a>
               </div>
               <div>
                 <span
@@ -203,8 +210,8 @@ const Layout = ({
 
             {/* Small screens: stacked layout */}
             <div class="sm:hidden space-y-2">
-              {/* Row 1: Docs MCP Server + Version */}
-              <div class="flex items-center justify-center gap-2">
+              {/* Row 1: Docs MCP Server + Version + Search */}
+              <div class="flex items-center justify-center gap-2 flex-wrap">
                 <a
                   href="/"
                   class="text-lg font-semibold text-gray-900 dark:text-white hover:text-primary-500 dark:hover:text-primary-400 transition-colors font-brand"
@@ -220,6 +227,13 @@ const Layout = ({
                     v{versionString}
                   </span>
                 ) : null}
+                <span class="text-gray-300 dark:text-gray-600">|</span>
+                <a
+                  href="/search"
+                  class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                >
+                  Search
+                </a>
               </div>
 
               {/* Row 2: Update notification */}

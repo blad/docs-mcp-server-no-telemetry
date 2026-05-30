@@ -21,9 +21,9 @@ const LibraryList = ({ libraries }: LibraryListProps) => {
         title="Welcome!"
         message={
           <>
-            To get started, click{" "}
-            <span class="font-semibold">Add New Documentation</span> above and
-            enter the URL of a documentation site to index.
+            Use the{" "}
+            <span class="font-semibold">Add New Documentation</span> form above
+            to index a documentation site or upload a file.
           </>
         }
       />
