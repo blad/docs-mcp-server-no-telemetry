@@ -29,32 +29,6 @@ vi.mock("../events", () => ({
   })),
 }));
 
-// Mock telemetry to prevent side effects and timeouts
-vi.mock("../telemetry", async () => {
-  return {
-    initTelemetry: vi.fn(),
-    shouldEnableTelemetry: vi.fn().mockReturnValue(false),
-    TelemetryService: vi.fn().mockImplementation(() => ({
-      shutdown: vi.fn(),
-    })),
-    telemetry: {
-      isEnabled: vi.fn().mockReturnValue(false),
-      setGlobalContext: vi.fn(),
-      track: vi.fn(),
-      shutdown: vi.fn(),
-    },
-    TelemetryEvent: {
-      APP_STARTED: "app_started",
-      APP_SHUTDOWN: "app_shutdown",
-      CLI_COMMAND: "cli_command",
-      TOOL_USED: "tool_used",
-      PIPELINE_JOB_STARTED: "pipeline_job_started",
-      PIPELINE_JOB_COMPLETED: "pipeline_job_completed",
-      PIPELINE_JOB_FAILED: "pipeline_job_failed",
-    },
-  };
-});
-
 // --- Additional mocks for createPipelineWithCallbacks behavior tests ---
 vi.mock("../pipeline/PipelineFactory", () => ({
   PipelineFactory: {

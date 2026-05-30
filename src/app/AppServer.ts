@@ -19,8 +19,6 @@ import { applyTrpcWebSocketHandler, registerTrpcService } from "../services/trpc
 import { registerWebService } from "../services/webService";
 import { registerWorkerService, stopWorkerService } from "../services/workerService";
 import type { IDocumentManagement } from "../store/trpc/interfaces";
-import { TelemetryEvent, telemetry } from "../telemetry";
-import { shouldEnableTelemetry } from "../telemetry/TelemetryConfig";
 import { printBanner } from "../utils/banner";
 import type { AppConfig } from "../utils/config";
 import { logger } from "../utils/logger";
@@ -81,51 +79,6 @@ export class AppServer {
    */
   async start(): Promise<FastifyInstance> {
     this.validateConfig();
-
-    // Get embedding configuration from the document service (source of truth)
-    const embeddingConfig = this.docService.getActiveEmbeddingConfig();
-
-    // Initialize telemetry if enabled
-    if (this.appConfig.app.telemetryEnabled && shouldEnableTelemetry()) {
-      try {
-        // Set global application context that will be included in all events
-        if (telemetry.isEnabled()) {
-          telemetry.setGlobalContext({
-            appVersion: __APP_VERSION__,
-            appPlatform: process.platform,
-            appNodeVersion: process.version,
-            appServicesEnabled: this.getActiveServicesList(),
-            appAuthEnabled: Boolean(this.appConfig.auth.enabled),
-            appReadOnly: Boolean(this.appConfig.app.readOnly),
-            // Add embedding configuration to global context
-            ...(embeddingConfig && {
-              aiEmbeddingProvider: embeddingConfig.provider,
-              aiEmbeddingModel: embeddingConfig.model,
-              aiEmbeddingDimensions: embeddingConfig.dimensions,
-            }),
-          });
-
-          // Track app start at the very beginning
-          telemetry.track(TelemetryEvent.APP_STARTED, {
-            services: this.getActiveServicesList(),
-            port: this.serverConfig.port,
-            externalWorker: Boolean(this.serverConfig.externalWorkerUrl),
-            // Include startup context when available
-            ...(this.serverConfig.startupContext?.cliCommand && {
-              cliCommand: this.serverConfig.startupContext.cliCommand,
-            }),
-            ...(this.serverConfig.startupContext?.mcpProtocol && {
-              mcpProtocol: this.serverConfig.startupContext.mcpProtocol,
-            }),
-            ...(this.serverConfig.startupContext?.mcpTransport && {
-              mcpTransport: this.serverConfig.startupContext.mcpTransport,
-            }),
-          });
-        }
-      } catch (error) {
-        logger.debug(`Failed to initialize telemetry: ${error}`);
-      }
-    }
 
     await this.setupServer();
 
@@ -195,16 +148,6 @@ export class AppServer {
         });
       }
 
-      // Track app shutdown
-      if (telemetry.isEnabled()) {
-        telemetry.track(TelemetryEvent.APP_SHUTDOWN, {
-          graceful: true,
-        });
-      }
-
-      // Shutdown telemetry service (this will flush remaining events)
-      await telemetry.shutdown();
-
       // Force close all connections to ensure immediate shutdown
       if (this.server.server) {
         this.server.server.closeAllConnections();
@@ -216,51 +159,24 @@ export class AppServer {
     } catch (error) {
       logger.error(`❌ Failed to stop AppServer gracefully: ${error}`);
 
-      // Track ungraceful shutdown
-      if (telemetry.isEnabled()) {
-        telemetry.track(TelemetryEvent.APP_SHUTDOWN, {
-          graceful: false,
-          error: error instanceof Error ? error.constructor.name : "UnknownError",
-        });
-        await telemetry.shutdown();
-      }
-
       throw error;
     }
   }
 
   /**
-   * Setup global error handling for telemetry
+   * Setup global error handling.
    */
   private setupErrorHandling(): void {
     // Only add listeners if they haven't been added yet (prevent duplicate listeners in tests)
     if (!process.listenerCount("unhandledRejection")) {
-      // Catch unhandled promise rejections
       process.on("unhandledRejection", (reason) => {
         logger.error(`Unhandled Promise Rejection: ${reason}`);
-        if (telemetry.isEnabled()) {
-          // Create an Error object from the rejection reason for better tracking
-          const error = reason instanceof Error ? reason : new Error(String(reason));
-          telemetry.captureException(error, {
-            error_category: "system",
-            component: AppServer.constructor.name,
-            context: "process_unhandled_rejection",
-          });
-        }
       });
     }
 
     if (!process.listenerCount("uncaughtException")) {
-      // Catch uncaught exceptions
       process.on("uncaughtException", (error) => {
         logger.error(`Uncaught Exception: ${error.message}`);
-        if (telemetry.isEnabled()) {
-          telemetry.captureException(error, {
-            error_category: "system",
-            component: AppServer.constructor.name,
-            context: "process_uncaught_exception",
-          });
-        }
         // Don't exit immediately, let the app attempt graceful shutdown
       });
     }
@@ -268,17 +184,6 @@ export class AppServer {
     // Setup Fastify error handler (if method exists - for testing compatibility)
     if (typeof this.server.setErrorHandler === "function") {
       this.server.setErrorHandler<FastifyError>(async (error, request, reply) => {
-        if (telemetry.isEnabled()) {
-          telemetry.captureException(error, {
-            errorCategory: "http",
-            component: "FastifyServer",
-            statusCode: error.statusCode || 500,
-            method: request.method,
-            route: request.routeOptions?.url || request.url,
-            context: "http_request_error",
-          });
-        }
-
         logger.error(`HTTP Error on ${request.method} ${request.url}: ${error.message}`);
 
         // Send appropriate error response
@@ -293,22 +198,9 @@ export class AppServer {
   }
 
   /**
-   * Get list of currently active services for telemetry
-   */
-  private getActiveServicesList(): string[] {
-    const services: string[] = [];
-    if (this.serverConfig.enableMcpServer) services.push("mcp");
-    if (this.serverConfig.enableWebInterface) services.push("web");
-    if (this.serverConfig.enableApiServer) services.push("api");
-    if (this.serverConfig.enableWorker) services.push("worker");
-    return services;
-  }
-
-  /**
    * Setup the server with plugins and conditionally enabled services.
    */
   private async setupServer(): Promise<void> {
-    // Setup global error handling for telemetry
     this.setupErrorHandling();
 
     // Setup remote event proxy if using an external worker

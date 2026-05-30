@@ -5,7 +5,6 @@
 import type { Argv } from "yargs";
 import { AutoDetectFetcher } from "../../scraper/fetcher";
 import { ScrapeMode } from "../../scraper/types";
-import { TelemetryEvent, telemetry } from "../../telemetry";
 import { FetchUrlTool } from "../../tools";
 import { loadConfig } from "../../utils/config";
 import { renderTextOutput } from "../output";
@@ -47,13 +46,6 @@ export function createFetchUrlCommand(cli: Argv) {
         });
     },
     async (argv) => {
-      await telemetry.track(TelemetryEvent.CLI_COMMAND, {
-        command: "fetch-url",
-        url: argv.url,
-        scrapeMode: argv.scrapeMode,
-        followRedirects: argv.followRedirects,
-        hasHeaders: (argv.header as string[])?.length > 0,
-      });
 
       const url = argv.url as string;
       // parseHeaders expects string[]. Yargs array option gives string[] | undefined (if not default)

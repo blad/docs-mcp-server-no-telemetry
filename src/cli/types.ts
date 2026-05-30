@@ -11,7 +11,6 @@ import type { IDocumentManagement } from "../store/trpc/interfaces";
 export interface GlobalOptions {
   verbose?: boolean;
   quiet?: boolean;
-  telemetry?: boolean;
   storePath?: string;
   output?: "json" | "yaml" | "toon";
 }

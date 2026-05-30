@@ -7,7 +7,6 @@ import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 import { EventBusService } from "./events";
 import { PipelineFactory } from "./pipeline/PipelineFactory";
 import { DocumentManagementService } from "./store/DocumentManagementService";
-import { TelemetryEvent } from "./telemetry";
 import { type AppConfig, loadConfig } from "./utils/config";
 import { sanitizeEnvironment } from "./utils/env";
 
@@ -333,7 +332,7 @@ describe("Service Configuration Validation", () => {
   });
 });
 
-describe("Service Registration for Telemetry", () => {
+describe("Service Registration", () => {
   let mockRegisterGlobalServices: Mock;
 
   beforeEach(() => {
@@ -463,158 +462,4 @@ describe("Service Registration for Telemetry", () => {
     });
   });
 
-  it("should ensure all CLI commands register services for telemetry tracking", () => {
-    // This test validates that the service registration pattern is consistent
-    // across all CLI commands for proper APP_SHUTDOWN event tracking
-
-    // Mock services that different commands might register
-    const serviceInstances = {
-      appServer: { stop: vi.fn() },
-      mcpStdioServer: { close: vi.fn() },
-      docService: { shutdown: vi.fn() },
-      pipeline: { stop: vi.fn() },
-    };
-
-    // Test each command type pattern
-    const commandPatterns = [
-      // web command: AppServer + DocService + Pipeline
-      {
-        appServer: serviceInstances.appServer,
-        docService: serviceInstances.docService,
-        pipeline: serviceInstances.pipeline,
-      },
-      // worker command: AppServer + DocService + Pipeline
-      {
-        appServer: serviceInstances.appServer,
-        docService: serviceInstances.docService,
-        pipeline: serviceInstances.pipeline,
-      },
-      // mcp stdio: MCP + DocService + Pipeline
-      {
-        mcpStdioServer: serviceInstances.mcpStdioServer,
-        docService: serviceInstances.docService,
-        pipeline: serviceInstances.pipeline,
-      },
-      // mcp http: AppServer + DocService + Pipeline
-      {
-        appServer: serviceInstances.appServer,
-        docService: serviceInstances.docService,
-        pipeline: serviceInstances.pipeline,
-      },
-    ];
-
-    // Verify each pattern calls registerGlobalServices appropriately
-    for (const pattern of commandPatterns) {
-      mockRegisterGlobalServices(pattern);
-    }
-
-    expect(mockRegisterGlobalServices).toHaveBeenCalledTimes(commandPatterns.length);
-
-    // Verify that each call included at least one service for proper shutdown tracking
-    const calls = mockRegisterGlobalServices.mock.calls;
-    for (const call of calls) {
-      const services = call[0];
-      const hasAnyService = Object.keys(services).length > 0;
-      expect(hasAnyService).toBe(true);
-    }
-  });
-});
-
-describe("CLI Command Telemetry Integration", () => {
-  let mockTelemetry: {
-    setGlobalContext: Mock;
-    track: Mock;
-    shutdown: Mock;
-  };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-
-    // Mock telemetry instance
-    mockTelemetry = {
-      setGlobalContext: vi.fn(),
-      track: vi.fn(),
-      shutdown: vi.fn().mockResolvedValue(undefined),
-    };
-
-    vi.doMock("../telemetry", () => ({
-      telemetry: mockTelemetry,
-    }));
-  });
-
-  it("should set global context in CLI preAction hook", async () => {
-    // Mock global context that should be set by CLI
-    const expectedContext = {
-      appInterface: "cli",
-      appPlatform: "darwin",
-      appVersion: "1.22.0",
-    };
-
-    // Simulate CLI preAction calling setGlobalContext
-    mockTelemetry.setGlobalContext(expectedContext);
-
-    expect(mockTelemetry.setGlobalContext).toHaveBeenCalledWith(expectedContext);
-  });
-
-  it("should track CLI_COMMAND events in postAction hook", async () => {
-    // Mock CLI command execution tracking
-    const commandStartTime = Date.now();
-    const commandEndTime = commandStartTime + 1500; // 1.5 seconds
-
-    // Simulate tracking CLI_COMMAND event
-    mockTelemetry.track(TelemetryEvent.CLI_COMMAND, {
-      command: "web",
-      success: true,
-      durationMs: commandEndTime - commandStartTime,
-    });
-
-    expect(mockTelemetry.track).toHaveBeenCalledWith(TelemetryEvent.CLI_COMMAND, {
-      command: "web",
-      success: true,
-      durationMs: 1500,
-    });
-  });
-
-  it("should track failed CLI commands with success: false", async () => {
-    // Mock failed command tracking
-    mockTelemetry.track(TelemetryEvent.CLI_COMMAND, {
-      command: "invalid-command",
-      success: false,
-      durationMs: 100,
-    });
-
-    expect(mockTelemetry.track).toHaveBeenCalledWith(TelemetryEvent.CLI_COMMAND, {
-      command: "invalid-command",
-      success: false,
-      durationMs: 100,
-    });
-  });
-
-  it("should track different command types", async () => {
-    // Test tracking for various CLI commands
-    const commands = ["web", "mcp", "worker", "fetch-url", "scrape-docs"];
-
-    for (const command of commands) {
-      mockTelemetry.track(TelemetryEvent.CLI_COMMAND, {
-        command,
-        success: true,
-        durationMs: 1000,
-      });
-    }
-
-    expect(mockTelemetry.track).toHaveBeenCalledTimes(commands.length);
-
-    // Verify each command was tracked correctly
-    const calls = mockTelemetry.track.mock.calls;
-    for (let i = 0; i < commands.length; i++) {
-      expect(calls[i]).toEqual([
-        TelemetryEvent.CLI_COMMAND,
-        {
-          command: commands[i],
-          success: true,
-          durationMs: 1000,
-        },
-      ]);
-    }
-  });
 });

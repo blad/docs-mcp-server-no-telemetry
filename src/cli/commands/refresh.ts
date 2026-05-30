@@ -8,7 +8,6 @@ import { PipelineFactory, PipelineJobStatus, type PipelineOptions } from "../../
 import type { IPipeline } from "../../pipeline/trpc/interfaces";
 import { createDocumentManagement, type DocumentManagementService } from "../../store";
 import type { IDocumentManagement } from "../../store/trpc/interfaces";
-import { TelemetryEvent, telemetry } from "../../telemetry";
 import { RefreshVersionTool } from "../../tools/RefreshVersionTool";
 import { loadConfig } from "../../utils/config";
 import { logger } from "../../utils/logger";
@@ -60,13 +59,6 @@ export function createRefreshCommand(cli: Argv) {
         );
     },
     async (argv) => {
-      await telemetry.track(TelemetryEvent.CLI_COMMAND, {
-        command: "refresh",
-        library: argv.library,
-        version: argv.version,
-        preserveHashes: argv.preserveHashes,
-        useServerUrl: !!argv.serverUrl,
-      });
 
       const library = argv.library as string;
       const version = argv.version as string | undefined;

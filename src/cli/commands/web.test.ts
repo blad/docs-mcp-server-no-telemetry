@@ -54,15 +54,6 @@ vi.mock("../../utils/config", async (importOriginal) => {
     })),
   };
 });
-// Mock telemetry
-vi.mock("../../telemetry", () => ({
-  telemetry: {
-    track: vi.fn(),
-  },
-  TelemetryEvent: {
-    CLI_COMMAND: "CLI_COMMAND",
-  },
-}));
 // Mock main to avoid importing real code
 vi.mock("../services", () => ({
   registerGlobalServices: vi.fn(),

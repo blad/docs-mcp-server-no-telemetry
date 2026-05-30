@@ -13,7 +13,6 @@ import {
   EmbeddingConfig,
   type EmbeddingModelConfig,
 } from "../store/embeddings/EmbeddingConfig";
-import { TelemetryService } from "../telemetry";
 import { logger } from "../utils/logger";
 import { getProjectRoot } from "../utils/paths";
 import type { GlobalOptions } from "./types";
@@ -330,17 +329,14 @@ export function warnHttpUsage(authConfig: AuthConfig | undefined, port: number):
 }
 
 /**
- * Creates EventBusService and TelemetryService together.
- * The TelemetryService automatically subscribes to events from the EventBusService.
- * @returns Object containing both services
+ * Creates EventBusService.
+ * @returns Object containing the event bus
  */
 export function createEventServices(): {
   eventBus: EventBusService;
-  telemetryService: TelemetryService;
 } {
   const eventBus = new EventBusService();
-  const telemetryService = new TelemetryService(eventBus);
-  return { eventBus, telemetryService };
+  return { eventBus };
 }
 
 /**

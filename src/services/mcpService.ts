@@ -13,7 +13,6 @@ import { createMcpServerInstance } from "../mcp/mcpServer";
 import { initializeTools } from "../mcp/tools";
 import type { IPipeline } from "../pipeline/trpc/interfaces";
 import type { IDocumentManagement } from "../store/trpc/interfaces";
-import { telemetry } from "../telemetry";
 import type { AppConfig } from "../utils/config";
 import { logger } from "../utils/logger";
 
@@ -65,10 +64,7 @@ export async function registerMcpService(
         const sessionServer = createMcpServerInstance(mcpTools, config);
         sseServers[transport.sessionId] = sessionServer;
 
-        // Log client connection (simple connection tracking without sessions)
-        if (telemetry.isEnabled()) {
-          logger.info(`🔗 MCP client connected: ${transport.sessionId}`);
-        }
+        logger.info(`🔗 MCP client connected: ${transport.sessionId}`);
 
         // Start heartbeat to keep connection alive and prevent client timeouts
         // SSE comments (lines starting with ':') are ignored by clients but keep the connection active
@@ -102,10 +98,7 @@ export async function registerMcpService(
           delete sseTransports[transport.sessionId];
           transport.close();
 
-          // Log client disconnection
-          if (telemetry.isEnabled()) {
-            logger.info(`🔗 MCP client disconnected: ${transport.sessionId}`);
-          }
+          logger.info(`🔗 MCP client disconnected: ${transport.sessionId}`);
         };
 
         reply.raw.on("close", cleanupConnection);

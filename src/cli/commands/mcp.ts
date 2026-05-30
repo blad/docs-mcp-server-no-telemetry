@@ -10,7 +10,6 @@ import { PipelineFactory, type PipelineOptions } from "../../pipeline";
 import { DocumentManagementClient, DocumentManagementService } from "../../store";
 import { EmbeddingModelChangedError } from "../../store/errors";
 import type { IDocumentManagement } from "../../store/trpc/interfaces";
-import { TelemetryEvent, telemetry } from "../../telemetry";
 import { loadConfig } from "../../utils/config";
 import { LogLevel, logger, setLogLevel } from "../../utils/logger";
 import { applyGlobalCliOutputMode } from "../output";
@@ -86,15 +85,6 @@ export function createMcpCommand(cli: Argv) {
       );
     },
     async (argv) => {
-      await telemetry.track(TelemetryEvent.CLI_COMMAND, {
-        command: "mcp",
-        protocol: argv.protocol,
-        port: argv.port,
-        host: argv.host,
-        useServerUrl: !!argv.serverUrl,
-        readOnly: argv.readOnly,
-        authEnabled: !!argv.authEnabled,
-      });
 
       const _port = validatePort((argv.port as string) || "6280"); // fallback for validation if undefined, but loadConfig handles defaults.
       // Wait, validatePort throws if invalid. If undefined, we should rely on loadConfig.

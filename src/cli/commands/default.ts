@@ -9,7 +9,6 @@ import { initializeTools } from "../../mcp/tools";
 import { PipelineFactory, type PipelineOptions } from "../../pipeline";
 import { DocumentManagementService } from "../../store";
 import { EmbeddingModelChangedError } from "../../store/errors";
-import { TelemetryEvent, telemetry } from "../../telemetry";
 import { loadConfig } from "../../utils/config";
 import { LogLevel, logger, setLogLevel } from "../../utils/logger";
 import { applyGlobalCliOutputMode } from "../output";
@@ -85,15 +84,6 @@ export function createDefaultAction(cli: Argv) {
       );
     },
     async (argv) => {
-      await telemetry.track(TelemetryEvent.CLI_COMMAND, {
-        command: "default",
-        protocol: argv.protocol,
-        port: argv.port,
-        host: argv.host,
-        resume: argv.resume,
-        readOnly: argv.readOnly,
-        authEnabled: !!argv.authEnabled,
-      });
 
       const resolvedProtocol = resolveProtocol(argv.protocol as string);
       if (resolvedProtocol === "stdio") {

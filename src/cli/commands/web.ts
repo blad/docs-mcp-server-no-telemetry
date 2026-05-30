@@ -7,7 +7,6 @@ import { startAppServer } from "../../app";
 import { PipelineFactory, type PipelineOptions } from "../../pipeline";
 import { createDocumentManagement, type DocumentManagementService } from "../../store";
 import type { IDocumentManagement } from "../../store/trpc/interfaces";
-import { TelemetryEvent, telemetry } from "../../telemetry";
 import { loadConfig } from "../../utils/config";
 import { logger } from "../../utils/logger";
 import { registerGlobalServices } from "../services";
@@ -47,12 +46,6 @@ export function createWebCommand(cli: Argv) {
         });
     },
     async (argv) => {
-      await telemetry.track(TelemetryEvent.CLI_COMMAND, {
-        command: "web",
-        port: argv.port,
-        host: argv.host,
-        useServerUrl: !!argv.serverUrl,
-      });
 
       const _port = validatePort((argv.port as string) || "6281"); // Fallback for validation, defaults via loadConfig
       const _host = validateHost((argv.host as string) || "127.0.0.1");

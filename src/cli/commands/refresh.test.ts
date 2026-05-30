@@ -53,15 +53,6 @@ vi.mock("../../utils/config", async (importOriginal) => {
     })),
   };
 });
-// Mock telemetry
-vi.mock("../../telemetry", () => ({
-  telemetry: {
-    track: vi.fn(),
-  },
-  TelemetryEvent: {
-    CLI_COMMAND: "CLI_COMMAND",
-  },
-}));
 
 describe("refresh command", () => {
   beforeEach(() => {

@@ -125,7 +125,6 @@ describe.skipIf(!DOCKER_AVAILABLE)("Docker image", () => {
           "-v",
           `${dataDir}:/data`,
           "-e",
-          "DOCS_MCP_TELEMETRY=false",
           IMAGE_TAG,
           "scrape",
           "docker-e2e-web",
@@ -165,7 +164,6 @@ describe.skipIf(!DOCKER_AVAILABLE)("Docker image", () => {
           "-v",
           `${fixtureDir}:/fixtures:ro`,
           "-e",
-          "DOCS_MCP_TELEMETRY=false",
           // Permit /fixtures as a file-access root inside the container, so
           // the default `allowedRoots` policy doesn't reject the PDF path.
           "-e",
@@ -227,7 +225,6 @@ describe.skipIf(!DOCKER_AVAILABLE)("Docker image", () => {
           "-v",
           `${docsDir}:/docs:ro`,
           "-e",
-          "DOCS_MCP_TELEMETRY=false",
           "-e",
           "DOCS_MCP_SCRAPER_SECURITY_FILE_ACCESS_ALLOWED_ROOTS=/docs",
           IMAGE_TAG,

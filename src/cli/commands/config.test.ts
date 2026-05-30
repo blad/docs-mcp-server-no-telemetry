@@ -16,14 +16,14 @@ vi.mock("../../utils/config", async (importOriginal) => {
         document: { maxSize: 10485760 },
         fetcher: { maxRetries: 6 },
       },
-      app: { telemetryEnabled: true },
+      app: { readOnly: false },
     })),
     isValidConfigPath: vi.fn((path: string) => {
       const validPaths = [
         "scraper.maxPages",
         "scraper.document.maxSize",
         "scraper.fetcher",
-        "app.telemetryEnabled",
+        "app.readOnly",
       ];
       return validPaths.includes(path);
     }),

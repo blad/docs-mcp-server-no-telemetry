@@ -6,7 +6,6 @@ import type { Argv } from "yargs";
 import { startAppServer } from "../../app";
 import { PipelineFactory, type PipelineOptions } from "../../pipeline";
 import { createLocalDocumentManagement } from "../../store";
-import { TelemetryEvent, telemetry } from "../../telemetry";
 import { loadConfig } from "../../utils/config";
 import { logger } from "../../utils/logger";
 import { registerGlobalServices } from "../services";
@@ -53,12 +52,6 @@ export function createWorkerCommand(cli: Argv) {
         });
     },
     async (argv) => {
-      await telemetry.track(TelemetryEvent.CLI_COMMAND, {
-        command: "worker",
-        port: argv.port,
-        host: argv.host,
-        resume: argv.resume,
-      });
 
       const _port = validatePort((argv.port as string) || "8080");
       const _host = validateHost((argv.host as string) || "127.0.0.1");

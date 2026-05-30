@@ -47,7 +47,6 @@ const envBoolean = z
 export const DEFAULT_CONFIG = {
   app: {
     storePath: "",
-    telemetryEnabled: false,
     readOnly: false,
     embeddingModel: "text-embedding-3-small",
   },
@@ -147,7 +146,6 @@ export const AppConfigSchema = z.object({
   app: z
     .object({
       storePath: z.string().default(DEFAULT_CONFIG.app.storePath),
-      telemetryEnabled: envBoolean.default(DEFAULT_CONFIG.app.telemetryEnabled),
       readOnly: envBoolean.default(DEFAULT_CONFIG.app.readOnly),
       embeddingModel: z.string().default(DEFAULT_CONFIG.app.embeddingModel),
     })
@@ -386,7 +384,6 @@ interface ConfigMapping {
 const configMappings: ConfigMapping[] = [
   { path: ["server", "protocol"], env: ["DOCS_MCP_PROTOCOL"], cli: "protocol" },
   { path: ["app", "storePath"], env: ["DOCS_MCP_STORE_PATH"], cli: "storePath" },
-  { path: ["app", "telemetryEnabled"], env: ["DOCS_MCP_TELEMETRY"] }, // Handled via --no-telemetry in CLI usually
   { path: ["app", "readOnly"], env: ["DOCS_MCP_READ_ONLY"], cli: "readOnly" },
   // Ports - Special handling for shared env vars is done in mapping logic
   {

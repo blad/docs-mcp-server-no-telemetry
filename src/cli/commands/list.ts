@@ -4,7 +4,6 @@
 
 import type { Argv } from "yargs";
 import { createDocumentManagement } from "../../store";
-import { TelemetryEvent, telemetry } from "../../telemetry";
 import { ListLibrariesTool } from "../../tools";
 import { loadConfig } from "../../utils/config";
 import { renderStructuredOutput } from "../output";
@@ -23,10 +22,6 @@ export function createListCommand(cli: Argv) {
       });
     },
     async (argv) => {
-      await telemetry.track(TelemetryEvent.CLI_COMMAND, {
-        command: "list",
-        useServerUrl: !!argv.serverUrl,
-      });
 
       const serverUrl = argv.serverUrl as string | undefined;
       const appConfig = loadConfig(argv, {

@@ -31,7 +31,7 @@ export interface AppServerConfig {
   /** Show ASCII art logo on startup (default: true) */
   showLogo?: boolean;
 
-  /** Startup context for telemetry (optional) */
+  /** Startup context (optional) */
   startupContext?: {
     /** CLI command that started the server (if applicable) */
     cliCommand?: string;

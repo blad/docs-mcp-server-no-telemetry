@@ -122,7 +122,6 @@ describe("MCP HTTP server E2E", () => {
         env: {
           ...testEnv,
           DOCS_MCP_STORE_PATH: path.join(projectRoot, "test", ".test-store-http"),
-          DOCS_MCP_TELEMETRY: "false",
           LOG_LEVEL: "info",
         },
       },

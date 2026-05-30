@@ -63,7 +63,6 @@ describe("MCP stdio server E2E", () => {
       env: {
         ...testEnv,
         DOCS_MCP_STORE_PATH: path.join(projectRoot, "test", ".test-store-stdio"),
-        DOCS_MCP_TELEMETRY: "false",
       },
     });
 
@@ -117,7 +116,6 @@ describe("MCP stdio server E2E", () => {
       env: {
         ...testEnv,
         DOCS_MCP_STORE_PATH: path.join(projectRoot, "test", ".test-store-stdio"),
-        DOCS_MCP_TELEMETRY: "false",
       },
     });
 

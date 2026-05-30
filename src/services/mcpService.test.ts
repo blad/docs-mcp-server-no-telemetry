@@ -32,11 +32,6 @@ vi.mock("../mcp/mcpServer", () => ({
   }),
 }));
 
-vi.mock("../telemetry", () => ({
-  telemetry: {
-    isEnabled: () => false,
-  },
-}));
 
 describe("MCP Service", () => {
   let server: ReturnType<typeof Fastify>;

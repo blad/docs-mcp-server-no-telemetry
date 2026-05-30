@@ -1,13 +1,11 @@
 /**
  * CLI main entry point with global shutdown and error handling.
- * Analytics is initialized immediately when imported for proper telemetry across all services.
  */
 
 import {
   ModelConfigurationError,
   UnsupportedProviderError,
 } from "../store/embeddings/EmbeddingFactory";
-import { telemetry } from "../telemetry";
 import { logger } from "../utils/logger";
 import { createCli } from "./index";
 
@@ -17,12 +15,10 @@ import {
   getActiveDocService,
   getActiveMcpStdioServer,
   getActivePipelineManager,
-  getActiveTelemetryService,
   setActiveAppServer,
   setActiveDocService,
   setActiveMcpStdioServer,
   setActivePipelineManager,
-  setActiveTelemetryService,
 } from "./services";
 
 let isShuttingDown = false;
@@ -70,21 +66,6 @@ const sigintHandler = async (): Promise<void> => {
       logger.debug("SIGINT: DocumentManagementService shut down.");
     }
 
-    // Cleanup TelemetryService (removes event listeners)
-    const telemetryService = getActiveTelemetryService();
-    if (telemetryService) {
-      telemetryService.shutdown();
-      setActiveTelemetryService(null);
-      logger.debug("SIGINT: TelemetryService shut down.");
-    }
-
-    // Analytics shutdown is handled by AppServer.stop() above
-    // Only shutdown analytics if no AppServer was running
-    if (!appServer && telemetry.isEnabled()) {
-      await telemetry.shutdown();
-      logger.debug("SIGINT: Analytics shut down.");
-    }
-
     logger.info("✅ Graceful shutdown completed");
     process.exit(0);
   } catch (error) {
@@ -103,9 +84,6 @@ export async function cleanupCliCommand(): Promise<void> {
 
     // Remove SIGINT handler since command completed successfully
     process.removeListener("SIGINT", sigintHandler);
-
-    // Shutdown analytics for non-server CLI commands to ensure clean exit
-    await telemetry.shutdown();
 
     // Avoid hanging processes by explicitly exiting
     process.exit(0);

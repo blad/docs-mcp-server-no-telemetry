@@ -9,7 +9,6 @@ import type { IPipeline } from "../../pipeline/trpc/interfaces";
 import { ScrapeMode } from "../../scraper/types";
 import { createDocumentManagement } from "../../store";
 import type { IDocumentManagement } from "../../store/trpc/interfaces";
-import { TelemetryEvent, telemetry } from "../../telemetry";
 import { ScrapeTool } from "../../tools";
 import { loadConfig } from "../../utils/config";
 import { logger } from "../../utils/logger";
@@ -161,24 +160,6 @@ export function createScrapeCommand(cli: Argv) {
       appConfig.scraper.maxPages = maxPages;
       appConfig.scraper.maxDepth = maxDepth;
       appConfig.scraper.maxConcurrency = maxConcurrency;
-
-      await telemetry.track(TelemetryEvent.CLI_COMMAND, {
-        command: "scrape",
-        library,
-        version: argv.version,
-        url,
-        maxPages,
-        maxDepth,
-        maxConcurrency,
-        scope: argv.scope,
-        scrapeMode: argv.scrapeMode,
-        preserveHashes,
-        followRedirects: argv.followRedirects,
-        hasHeaders: (argv.header as string[]).length > 0,
-        hasIncludePatterns: (argv.includePattern as string[]).length > 0,
-        hasExcludePatterns: (argv.excludePattern as string[]).length > 0,
-        useServerUrl: !!serverUrl,
-      });
 
       const eventBus = getEventBus(argv as CliContext);
 

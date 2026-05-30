@@ -4,7 +4,6 @@
 
 import type { Argv } from "yargs";
 import { createDocumentManagement } from "../../store";
-import { TelemetryEvent, telemetry } from "../../telemetry";
 import { FindVersionTool } from "../../tools";
 import { loadConfig } from "../../utils/config";
 import { renderStructuredOutput } from "../output";
@@ -35,12 +34,6 @@ export function createFindVersionCommand(cli: Argv) {
         });
     },
     async (argv) => {
-      await telemetry.track(TelemetryEvent.CLI_COMMAND, {
-        command: "find-version",
-        library: argv.library,
-        version: argv.version,
-        useServerUrl: !!argv.serverUrl,
-      });
 
       const library = argv.library as string;
       const version = argv.version as string | undefined;

@@ -7,7 +7,6 @@ import { PipelineFactory } from "../scraper/pipelines/PipelineFactory";
 import type { ContentPipeline } from "../scraper/pipelines/types";
 import type { ScrapeResult, ScraperOptions } from "../scraper/types";
 import type { Chunk } from "../splitter/types";
-import { telemetry } from "../telemetry";
 import type { AppConfig } from "../utils/config";
 import { logger } from "../utils/logger";
 import { sortVersionsDescending } from "../utils/version";
@@ -466,24 +465,6 @@ export class DocumentManagementService {
       // Emit library change event after adding documents
       this.eventBus.emit(EventType.LIBRARY_CHANGE, undefined);
     } catch (error) {
-      // Track processing failures with native error tracking
-      const processingTime = performance.now() - processingStart;
-
-      if (error instanceof Error) {
-        telemetry.captureException(error, {
-          mimeType: contentType,
-          contentSizeBytes: chunks.reduce(
-            (sum: number, chunk: Chunk) => sum + chunk.content.length,
-            0,
-          ),
-          processingTimeMs: Math.round(processingTime),
-          library,
-          libraryVersion: normalizedVersion || null,
-          context: "processed_content_storage",
-          component: DocumentManagementService.constructor.name,
-        });
-      }
-
       throw error;
     }
   }

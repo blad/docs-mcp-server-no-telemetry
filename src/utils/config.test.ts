@@ -38,7 +38,6 @@ describe("Configuration Loading", () => {
 
     // Clear relevant env vars
     delete process.env.DOCS_MCP_CONFIG;
-    delete process.env.DOCS_MCP_TELEMETRY;
     delete process.env.DOCS_MCP_READ_ONLY;
     delete process.env.DOCS_MCP_STORE_PATH;
     delete process.env.DOCS_MCP_AUTH_ENABLED;
@@ -115,7 +114,7 @@ describe("Configuration Loading", () => {
 
     it("should load explicit config from --config and NOT write back", () => {
       const configPath = path.join(tmpDir, "read-only-config.yaml");
-      const initialContent = "app:\n  telemetryEnabled: false\n";
+      const initialContent = "app:\n  readOnly: false\n";
       fs.writeFileSync(configPath, initialContent);
 
       // Verify file creation timestamp
@@ -129,7 +128,7 @@ describe("Configuration Loading", () => {
 
       const config = loadConfig({ config: configPath });
 
-      expect(config.app.telemetryEnabled).toBe(false);
+      expect(config.app.readOnly).toBe(false);
 
       // Check it didn't write back defaults (like heartbeatMs)
       const contentAfter = fs.readFileSync(configPath, "utf8");
@@ -274,7 +273,7 @@ describe("Config CLI Helpers", () => {
     it("returns true for valid paths", () => {
       expect(isValidConfigPath("scraper.maxPages")).toBe(true);
       expect(isValidConfigPath("scraper.document.maxSize")).toBe(true);
-      expect(isValidConfigPath("app.telemetryEnabled")).toBe(true);
+      expect(isValidConfigPath("app.readOnly")).toBe(true);
     });
 
     it("returns false for invalid paths", () => {
@@ -289,7 +288,7 @@ describe("Config CLI Helpers", () => {
         maxPages: 1000,
         document: { maxSize: 10485760 },
       },
-      app: { telemetryEnabled: true },
+      app: { readOnly: false },
     };
 
     it("gets scalar value", () => {
