@@ -47,7 +47,7 @@ const envBoolean = z
 export const DEFAULT_CONFIG = {
   app: {
     storePath: "",
-    telemetryEnabled: true,
+    telemetryEnabled: false,
     readOnly: false,
     embeddingModel: "text-embedding-3-small",
   },

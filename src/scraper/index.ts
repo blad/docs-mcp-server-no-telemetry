@@ -6,4 +6,5 @@ export { GitHubScraperStrategy } from "./strategies/GitHubScraperStrategy";
 export { LocalFileStrategy } from "./strategies/LocalFileStrategy";
 export { NpmScraperStrategy } from "./strategies/NpmScraperStrategy";
 export { PyPiScraperStrategy } from "./strategies/PyPiScraperStrategy";
+export { StoredFileStrategy } from "./strategies/StoredFileStrategy";
 export { WebScraperStrategy } from "./strategies/WebScraperStrategy";

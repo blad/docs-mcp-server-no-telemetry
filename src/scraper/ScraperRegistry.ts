@@ -6,6 +6,7 @@ import { GitHubScraperStrategy } from "./strategies/GitHubScraperStrategy";
 import { LocalFileStrategy } from "./strategies/LocalFileStrategy";
 import { NpmScraperStrategy } from "./strategies/NpmScraperStrategy";
 import { PyPiScraperStrategy } from "./strategies/PyPiScraperStrategy";
+import { StoredFileStrategy } from "./strategies/StoredFileStrategy";
 import { WebScraperStrategy } from "./strategies/WebScraperStrategy";
 import type { ScraperStrategy } from "./types";
 
@@ -26,12 +27,17 @@ export class ScraperRegistry {
    * Each call returns a new instance to ensure state isolation between parallel scrapes.
    */
   getStrategy(url: string): ScraperStrategy {
-    if (!url.startsWith("github-file://")) {
+    if (!url.startsWith("github-file://") && !url.startsWith("stored://")) {
       validateUrl(url);
     }
 
     // Check each strategy type without instantiating heavy objects.
     // Order matters: more specific strategies should come before generic ones.
+
+    if (isStoredFileUrl(url)) {
+      logger.debug(`Using strategy "StoredFileStrategy" for URL: ${url}`);
+      return new StoredFileStrategy(this.config);
+    }
 
     if (isLocalFileUrl(url)) {
       logger.debug(`Using strategy "LocalFileStrategy" for URL: ${url}`);
@@ -60,6 +66,10 @@ export class ScraperRegistry {
 
     throw new ScraperError(`No strategy found for URL: ${url}`);
   }
+}
+
+function isStoredFileUrl(url: string): boolean {
+  return url.startsWith("stored://");
 }
 
 function isLocalFileUrl(url: string): boolean {

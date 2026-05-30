@@ -1,5 +1,7 @@
 # Grounded Docs: Your AI's Up-to-Date Documentation Expert
 
+> **This is a personal fork of [arabold/docs-mcp-server](https://github.com/arabold/docs-mcp-server).** Telemetry is disabled by default — no usage data is sent anywhere. Run from source after `npm run build`.
+
 **Docs MCP Server** solves the problem of AI hallucinations and outdated knowledge by providing a personal, always-current documentation index for your AI coding assistant. It fetches official docs from websites, GitHub, npm, PyPI, and local files, allowing your AI to query the exact version you are using.
 
 ![Docs MCP Server Web Interface](docs/docs-mcp-server.png)
@@ -40,28 +42,35 @@ See **[Supported Formats](docs/concepts/supported-formats.md)** for the complete
 
 For agents and scripts, the CLI is usually the simplest way to use Grounded Docs.
 
-**1. Index documentation** (requires Node.js 22+):
+First, ensure you're on Node.js 22 (install [nvm](https://github.com/nvm-sh/nvm) if you haven't already), then build:
 
 ```bash
-npx @arabold/docs-mcp-server@latest scrape react https://react.dev/reference/react
+nvm use
+npm run build
+```
+
+**1. Index documentation:**
+
+```bash
+node dist/index.js scrape react https://react.dev/reference/react
 ```
 
 For hash-routed SPA docs sites, enable hash preservation explicitly:
 
 ```bash
-npx @arabold/docs-mcp-server@latest scrape my-spa https://docs.example.com/#/guide --preserve-hashes
+node dist/index.js scrape my-spa https://docs.example.com/#/guide --preserve-hashes
 ```
 
 **2. Query the index:**
 
 ```bash
-npx @arabold/docs-mcp-server@latest search react "useEffect cleanup" --output yaml
+node dist/index.js search react "useEffect cleanup" --output yaml
 ```
 
 **3. Fetch a single page as Markdown:**
 
 ```bash
-npx @arabold/docs-mcp-server@latest fetch-url https://react.dev/reference/react/useEffect
+node dist/index.js fetch-url https://react.dev/reference/react/useEffect
 ```
 
 ### Output Behavior
@@ -80,10 +89,10 @@ The [`skills/`](skills/) directory contains [Agent Skills](https://agentskills.i
 
 If you want a long-running MCP endpoint for Claude, Cline, Copilot, Gemini CLI, or other MCP clients:
 
-**1. Start the server:**
+**1. Start the server** (after `npm run build`):
 
 ```bash
-npx @arabold/docs-mcp-server@latest
+npm start
 ```
 
 **2. Open the Web UI** at **[http://localhost:6280](http://localhost:6280)** to add documentation.
@@ -127,7 +136,7 @@ Using an embedding model is **optional** but dramatically improves search qualit
 **Example: Enable OpenAI Embeddings**
 
 ```bash
-OPENAI_API_KEY="sk-proj-..." npx @arabold/docs-mcp-server@latest
+OPENAI_API_KEY="sk-proj-..." npm start
 ```
 
 See **[Embedding Models](docs/guides/embedding-models.md)** for configuring **Ollama**, **Gemini**, **Azure**, and others.
@@ -137,7 +146,7 @@ See **[Embedding Models](docs/guides/embedding-models.md)** for configuring **Ol
 ## 📚 Documentation
 
 ### Getting Started
--   **[Installation](docs/setup/installation.md)**: Detailed setup guides for Docker, Node.js (npx), and Embedded mode.
+-   **[Installation](docs/setup/installation.md)**: Detailed setup guides for Docker, Node.js, and Embedded mode.
 -   **[Connecting Clients](docs/guides/mcp-clients.md)**: How to connect Claude, VS Code (Cline/Roo), and other MCP clients.
 -   **[Basic Usage](docs/guides/basic-usage.md)**: Using the Web UI, CLI, and scraping local files.
 -   **[Configuration](docs/setup/configuration.md)**: Full reference for config files and environment variables.

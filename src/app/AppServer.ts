@@ -5,6 +5,7 @@
 
 import path from "node:path";
 import formBody from "@fastify/formbody";
+import multipart from "@fastify/multipart";
 import fastifyStatic from "@fastify/static";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import Fastify, { type FastifyError, type FastifyInstance } from "fastify";
@@ -320,6 +321,13 @@ export class AppServer {
 
     // Register core Fastify plugins
     await this.server.register(formBody);
+    await this.server.register(multipart, {
+      limits: {
+        fileSize: 100 * 1024 * 1024, // 100 MB
+        files: 1,
+        fields: 10,
+      },
+    });
 
     // Add request logging middleware for OAuth debugging
     if (this.appConfig.auth.enabled) {

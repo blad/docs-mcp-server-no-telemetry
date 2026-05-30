@@ -152,8 +152,8 @@ export class ScrapeTool {
       includePatterns: scraperOptions?.includePatterns,
       excludePatterns: scraperOptions?.excludePatterns,
       preserveHashes: scraperOptions?.preserveHashes,
-      headers: scraperOptions?.headers, // <-- propagate headers
-      clean: scraperOptions?.clean, // <-- propagate clean option
+      headers: scraperOptions?.headers,
+      clean: scraperOptions?.clean,
     });
 
     // Conditionally wait for completion

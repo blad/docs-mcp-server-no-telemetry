@@ -123,21 +123,11 @@ const ScrapeFormContent = ({
         data-initial-headers={headersJson}
         x-data="{
           url: '',
-          hasPath: false,
-          headers: [],
-          checkUrlPath() {
-            try {
-              const url = new URL(this.url);
-              this.hasPath = url.pathname !== '/' && url.pathname !== '';
-            } catch (e) {
-              this.hasPath = false;
-            }
-          }
+          headers: []
         }"
         x-init="
           url = $el.dataset.initialUrl || '';
           headers = JSON.parse($el.dataset.initialHeaders || '[]');
-          checkUrlPath();
         "
       >
         {/* Hidden field to tell backend which button to return on success */}
@@ -150,22 +140,7 @@ const ScrapeFormContent = ({
             >
               URL
             </label>
-            <Tooltip
-              text={
-                <div>
-                  <p>Enter the URL of the documentation you want to scrape.</p>
-                  <p class="mt-2">
-                    For local files/folders, you must use the{" "}
-                    <code>file://</code> prefix and ensure the path is
-                    accessible to the server.
-                  </p>
-                  <p class="mt-2">
-                    If running in Docker, <b>mount the folder</b> (see README
-                    for details).
-                  </p>
-                </div>
-              }
-            />
+            <Tooltip text="Enter the URL of the documentation you want to scrape." />
           </div>
           <input
             type="url"
@@ -173,24 +148,9 @@ const ScrapeFormContent = ({
             id="url"
             required
             x-model="url"
-            x-on:input="checkUrlPath"
-            x-on:paste="$nextTick(() => checkUrlPath())"
             placeholder="https://docs.example.com/library/"
             class="mt-0.5 block w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           />
-          <div
-            x-show="hasPath && !(url.startsWith('file://'))"
-            x-cloak
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 transform -translate-y-2"
-            x-transition:enter-end="opacity-100 transform translate-y-0"
-            class="mt-2"
-          >
-            <Alert
-              type="info"
-              message="By default, only subpages under the given URL will be scraped. To scrape the whole website, adjust the 'Scope' option in Advanced Options."
-            />
-          </div>
         </div>
         <div>
           <div class="flex items-center">

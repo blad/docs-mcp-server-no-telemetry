@@ -6,7 +6,7 @@ import { logger } from "../../../utils/logger";
 import AddJobButton from "../../components/AddJobButton";
 import AddVersionButton from "../../components/AddVersionButton";
 import Alert from "../../components/Alert";
-import ScrapeForm from "../../components/ScrapeForm";
+import AddJobTabs from "../../components/AddJobTabs";
 import { DEFAULT_EXCLUSION_PATTERNS } from "../../../scraper/utils/defaultPatterns";
 import { ValidationError } from "../../../tools/errors";
 
@@ -20,11 +20,10 @@ export function registerNewJobRoutes(
   scrapeTool: ScrapeTool,
   scraperConfig: AppConfig["scraper"]
 ) {
-  // GET /web/jobs/new - Return the form component wrapped in its container
+  // GET /web/jobs/new - Return the tabbed form panel
   server.get("/web/jobs/new", async () => {
-    // Return the wrapper component which includes the container div
     return (
-      <ScrapeForm
+      <AddJobTabs
         defaultExcludePatterns={DEFAULT_EXCLUSION_PATTERNS}
         scraperConfig={scraperConfig}
       />

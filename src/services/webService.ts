@@ -22,6 +22,7 @@ import { registerCancelJobRoute } from "../web/routes/jobs/cancel";
 import { registerClearCompletedJobsRoute } from "../web/routes/jobs/clear-completed";
 import { registerJobListRoutes } from "../web/routes/jobs/list";
 import { registerNewJobRoutes } from "../web/routes/jobs/new";
+import { registerUploadJobRoute } from "../web/routes/jobs/upload";
 import { registerLibraryDetailRoutes } from "../web/routes/libraries/detail";
 import { registerLibrariesRoutes } from "../web/routes/libraries/list";
 import { registerStatsRoute } from "../web/routes/stats";
@@ -65,6 +66,7 @@ export async function registerWebService(
   );
   registerJobListRoutes(server, listJobsTool);
   registerNewJobRoutes(server, scrapeTool, appConfig.scraper);
+  registerUploadJobRoute(server, scrapeTool, appConfig, externalWorkerUrl);
   registerCancelJobRoute(server, cancelJobTool);
   registerClearCompletedJobsRoute(server, clearCompletedJobsTool);
   registerEventsRoute(server, eventBus);
